@@ -2,4 +2,8 @@
 
 const socket = io();
 
-socket.emit('movement', "lol");
+// socket.on("newPlayer", playerId => {
+//   const playerName = window.prompt("Fill in a name")
+//
+//   socket.emit("playerName", {playerId: playerId, playerName: playerName});
+// });
