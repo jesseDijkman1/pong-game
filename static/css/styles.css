@@ -22,3 +22,9 @@
 #my-pad {
   right: 0;
 }
+
+#ball {
+  background: red;
+  border-radius: 100%;
+  position: absolute;
+}

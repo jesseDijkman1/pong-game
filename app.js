@@ -55,12 +55,22 @@ let players = [];
 
 // App routing
 app.get("/", (req, res) => {
+  let ballX = parseInt(req.query.bx) || 50;
+  let ballY = parseInt(req.query.by) || 50;
+  let ballSize = parseInt(req.query.bSize);
   players.push(new Pad())
   players.push(new Pad())
-  res.render("index.ejs", {padLeft: players[0], padRight: players[1]})
+  res.render("index.ejs", {padLeft: players[0], padRight: players[1], ballX: ballX, ballY: ballY, ballSize: ballSize})
 });
 
+app.get("/moveBall", (req, res) => {
+  let moveDistance = 1;
+  let ballSize = 30;
+  let ballX = parseInt(req.query.bx) + moveDistance;
+  let ballY = parseInt(req.query.by);
 
+  res.redirect(`/?bx=${ballX}&by=${ballY}&bSize=${ballSize}`)
+})
 
 app.post("/updatePad", (req, res) => {
   const moveDistance = 50;
