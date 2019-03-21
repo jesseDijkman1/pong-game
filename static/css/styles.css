@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 0 auto;
+}
+
+#interface {
+  width: 100vw;
+  height: 90vh;
+  position: absolute;
+  bottom: 0;
+  border: solid 2px red;
+}
+
+.pad {
+  /* width: 30px; */
+  /* height: 80px; */
+  background: black !important;
+  position: absolute !important;
+}
+
+#my-pad {
+  right: 0;
+}

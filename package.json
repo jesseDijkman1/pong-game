@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/jesseDijkman1/pong-game#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
     "express": "^4.16.4",
     "socket.io": "^2.2.0"
   }
