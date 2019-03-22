@@ -65,24 +65,27 @@ app.get("/", (req, res) => {
 
 app.get("/moveBall", (req, res) => {
   let moveDistance = 1;
-  let ballSize = 30;
-  let ballX = parseInt(req.query.bx) + moveDistance;
+  let ballSize = 5; // vw
+  let ballX = parseInt(req.query.bx) + ballSize;
   let ballY = parseInt(req.query.by);
 
   res.redirect(`/?bx=${ballX}&by=${ballY}&bSize=${ballSize}`)
 })
 
 app.post("/updatePad", (req, res) => {
+  let ballX = parseInt(req.query.bx) || 50;
+  let ballY = parseInt(req.query.by) || 50;
+  let ballSize = parseInt(req.query.bSize);
   const moveDistance = 50;
   const direction = req.body.direction;
   const pRightY = parseInt(req.body.pRightY);
 
   if (direction == "up") {
     players[1].y = parseInt(players[1].y) - moveDistance;
-    res.render("index.ejs", {padLeft: players[0], padRight: players[1]})
+    res.render("index.ejs", {padLeft: players[0], padRight: players[1], ballX: ballX, ballY: ballY, ballSize: ballSize})
   } else {
     players[1].y = parseInt(players[1].y) + moveDistance;
-    res.render("index.ejs", {padLeft: players[0], padRight: players[1]})
+    res.render("index.ejs", {padLeft: players[0], padRight: players[1], ballX: ballX, ballY: ballY, ballSize: ballSize})
   }
 })
 
