@@ -1,26 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="css/styles.css">
-  <meta http-equiv="refresh" content="0.1;url=http://localhost:4000/moveBall?bx=<%=ballX %>&by=<%= ballY %>&bSize=<%= ballSize %>">
   <title>Pong game</title>
 </head>
+
 <body>
-  <h1>Multiplayer pong</h1>
-
-  <div id="interface">
-    <div id="ball" style="left:<%= ballX %>vw; top: <%= ballY %>vh;width:<%= ballSize %>vw; height:<%= ballSize %>vw"></div>
-    <div id="ball" style="left"></div>
-    <div class="pad pad-left"></div>
-    <div class="pad pad-right" style="position:absolute;right:0;top:<%= padRight.y %>px;height:<%= padRight.padHeight %>;width:<%= padRight.padWidth %>;right:0"></div>
-  </div>
-
-  <form method="post" action="/updatePad?bx=<%=ballX %>&by=<%= ballY %>&bSize=<%= ballSize %>">
-    <input type="submit" name="direction" value="up">
-    <input type="submit" name="direction" value="down">
-  </form>
+  <main class="rooms-list">
+    <% rooms.forEach(r => { %>
+    <article class="room" id="<%= r.id %>">
+      <h1>Room: <%= r.id %></h1>
+      <small>Max players: <%= r.maxPlayers %></small>
+      <a class="overlay" href="<%= r.href %>"></a>
+    </article>
+    <% }) %>
+  </main>
 </body>
+
 </html>

@@ -1,30 +1,39 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  margin: 0 auto;
-  padding: 0 auto;
 }
 
-#interface {
-  width: 100vw;
-  height: 90vh;
+html {
+  font-family: system-ui, Arial, sans-serif;
+}
+
+.rooms-list {
+  font-size: 1.8rem;
+  padding: 0 3vw;
+  max-width: 20em;
+  margin: 1.5em auto;
+
+}
+
+.room {
+  margin-bottom: 1em;
+  padding: .5em;
+  position: relative;
+  background: #232323;
+  color: #e0e0e0;
+}
+
+.overlay {
+  background: white;
+  opacity: 0;
   position: absolute;
-  bottom: 0;
-  border: solid 2px red;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.pad {
-  /* width: 30px; */
-  /* height: 80px; */
-  background: black !important;
-  position: absolute !important;
-}
-
-#my-pad {
-  right: 0;
-}
-
-#ball {
-  background: red;
-  border-radius: 100%;
-  position: absolute;
+.overlay:hover {
+  opacity: .2;s
 }

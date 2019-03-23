@@ -17,82 +17,47 @@ const io = socketIO(server);
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(express.static("static"));
-app.use(bodyParser.urlencoded({extended: true}));
-
-class Pad {
-  constructor(playerID) {
-    this.player = playerID;
-    this.padHeight =  `${80}px`;
-    this.padWidth = `${30}px`;
-    this.y = "0";
-  }
-
-  getData() {
-    return {
-      padHeight: this.padHeight,
-      padWidth: this.padWidth,
-      y: this.y
-    }
-  }
-}
-
-
-// Can change it to an array or generete keys
-// let players = {
-//   p1: undefined,
-//   p2: undefined
-// };
-
-// something with the socketIO
-// function temp() {
-//   players.p1 = new Pad()
-//   players.p2 = new Pad()
-// }
-// temp()
-
-
-let players = [];
-
-// App routing
-app.get("/", (req, res) => {
-  let ballX = parseInt(req.query.bx) || 50;
-  let ballY = parseInt(req.query.by) || 50;
-  let ballSize = parseInt(req.query.bSize);
-  players.push(new Pad())
-  players.push(new Pad())
-  res.render("index.ejs", {padLeft: players[0], padRight: players[1], ballX: ballX, ballY: ballY, ballSize: ballSize})
-});
-
-app.get("/moveBall", (req, res) => {
-  let moveDistance = 1;
-  let ballSize = 5; // vw
-  let ballX = parseInt(req.query.bx) + ballSize;
-  let ballY = parseInt(req.query.by);
-
-  res.redirect(`/?bx=${ballX}&by=${ballY}&bSize=${ballSize}`)
-})
-
-app.post("/updatePad", (req, res) => {
-  let ballX = parseInt(req.query.bx) || 50;
-  let ballY = parseInt(req.query.by) || 50;
-  let ballSize = parseInt(req.query.bSize);
-  const moveDistance = 50;
-  const direction = req.body.direction;
-  const pRightY = parseInt(req.body.pRightY);
-
-  if (direction == "up") {
-    players[1].y = parseInt(players[1].y) - moveDistance;
-    res.render("index.ejs", {padLeft: players[0], padRight: players[1], ballX: ballX, ballY: ballY, ballSize: ballSize})
-  } else {
-    players[1].y = parseInt(players[1].y) + moveDistance;
-    res.render("index.ejs", {padLeft: players[0], padRight: players[1], ballX: ballX, ballY: ballY, ballSize: ballSize})
-  }
-})
-
-// Not sure if socket IO is the way to go, it looks like I will have to write client side javascript
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 // Socket IO
 // let players = {};
+
+const maxRooms = 5;
+
+function roomGen() {
+
+  const rooms = [];
+
+  for (let room = 0; room < maxRooms; room++) {
+    rooms.push({
+      id: room,
+      href: `/room/${room}`,
+      maxPlayers: 5
+    })
+  }
+  return rooms
+}
+
+app.get("/lobby", (req, res) => {
+  res.render("index.ejs", {
+    rooms: roomGen()
+  });
+})
+
+app.get("/room/:id", (req, res) => {
+  if (parseInt(req.params.id) > maxRooms) {
+    throw "Room doesn't exist";
+  }
+
+  const room = {
+    id: req.params.id
+  }
+  res.render("room.ejs", {
+    room: room
+  })
+})
 
 io.on("connection", socket => {
   // Add new player to players object
