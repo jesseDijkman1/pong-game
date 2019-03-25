@@ -21,58 +21,19 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+app.get("/", (req, res) => {
+  res.render("index.ejs")
+})
+
+
 // Socket IO
-// let players = {};
 
-const maxRooms = 5;
-
-function roomGen() {
-
-  const rooms = [];
-
-  for (let room = 0; room < maxRooms; room++) {
-    rooms.push({
-      id: room,
-      href: `/room/${room}`,
-      maxPlayers: 5
-    })
-  }
-  return rooms
-}
-
-app.get("/lobby", (req, res) => {
-  res.render("index.ejs", {
-    rooms: roomGen()
-  });
-})
-
-app.get("/room/:id", (req, res) => {
-  if (parseInt(req.params.id) > maxRooms) {
-    throw "Room doesn't exist";
-  }
-
-  const room = {
-    id: req.params.id
-  }
-  res.render("room.ejs", {
-    room: room
-  })
-})
+const players = {};
 
 io.on("connection", socket => {
-  // Add new player to players object
-  // players[socket.id] = ;
-
-  updatePlayers();
-  socket.send("HELLO", socket.id)
-  // socket.emit("newPlayer", socket.id);
-
-  // Remove disconnected player from players object
-  socket.on("disconnect", () => {
-    delete players[socket.id];
-
-    updatePlayers();
-  });
+  players[socket.id] = {};
+  
+  socket.on("disconnect", () => delete players[socket.id]);
 });
 
 server.listen(port, () => console.log(`Listening to port: ${port}`));

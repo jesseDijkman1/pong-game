@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="css/styles.css">
-  <title>Pong game</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io("http://localhost:4000")
+  </script>
+  <title>Lobby</title>
 </head>
-
 <body>
-  <main class="rooms-list">
-    <% rooms.forEach(r => { %>
-    <article class="room" id="<%= r.id %>">
-      <h1>Room: <%= r.id %></h1>
-      <small>Max players: <%= r.maxPlayers %></small>
-      <a class="overlay" href="<%= r.href %>"></a>
-    </article>
-    <% }) %>
-  </main>
+
+  <canvas></canvas>
 </body>
 
 </html>
