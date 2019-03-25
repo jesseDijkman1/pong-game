@@ -3,15 +3,13 @@
 // Packages
 const express = require("express");
 const ejs = require("ejs");
-const http = require("http");
-const socketIO = require("socket.io");
 const bodyParser = require("body-parser");
+// const cookieParser = require("cookie-parser");
+// const session = require("express-session");
 
 // Default variables
 const port = 4000;
 const app = express();
-const server = http.Server(app);
-const io = socketIO(server);
 
 // App settings
 app.set('view engine', 'ejs');
@@ -20,20 +18,38 @@ app.use(express.static("static"));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+// app.use(cookieParser());
+// app.use(session({secret: "Shh, its a secret!"}));
+
+let players = [];
+let foo;
 
 app.get("/", (req, res) => {
-  res.render("index.ejs")
+  foo = {
+    player_1: null,
+    player_2: null
+  }
+
+  res.redirect("/lobby")
 })
 
+app.get("/lobby", (req, res) => {
+  res.render("index.ejs", foo)
+})
 
-// Socket IO
+app.post("/pickPlayer", (req, res) => {
+  const nr = req.body.player;
+  foo[`player_${nr}`] = true;
 
-const players = {};
+  res.redirect("/lobby")
+})
 
-io.on("connection", socket => {
-  players[socket.id] = {};
-  
-  socket.on("disconnect", () => delete players[socket.id]);
-});
+app.get("/player/:id", (req, res) => {
 
-server.listen(port, () => console.log(`Listening to port: ${port}`));
+})
+
+app.get("/waiting", (req, res) => {
+
+})
+
+app.listen(port, () => console.log(`Listening on port: ${port}`))
