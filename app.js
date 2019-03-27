@@ -6,7 +6,7 @@ const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-
+// const sessionStore = new session.MemoryStore();
 // Default variables
 const port = 4000;
 const app = express();
@@ -20,51 +20,26 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(session({secret: "Shh, its a secret!"}));
+// app.use(cookieParser());
+// app.use(session({store: sessionStore, secret: "mysecret"}));
 
 let players = [];
 
 app.get("/", (req, res) => {
-  if (players.length <= 2) {
-    if (!players.includes(req.session.id)) {
-      players.push(req.session.id);
-    }
-    res.redirect(`player/${players.indexOf(req.session.id)}?y=0`);
-  }
+  console.log("in root")
+  res.redirect("/lobby")
 })
 
-app.get("/test", (req, res) => {
+app.get("/lobby", (req, res) => {
+  console.log("in lobby")
+  const allSessions = Object.keys(req.sessionStore.sessions);
 
-    // let tst = ;
-    console.log("tst", players, players.indexOf(req.session.id))
-  res.render("index.ejs", {id: players.indexOf(req.session.id)})
-})
-
-app.get("/player/:id", (req, res) => {
-  let me = players.map((d, i) => {
-    return {id: i, token: d, yPos: 0}
-  })
-
-  players = me;
-  console.log("me", me)
-  res.render("view.ejs", players[req.params.id])
-})
-
-app.post("/update", (req, res) => {
-
-  let maxDistance = 10;
-  let y = parseInt(req.body.y);
-  console.log(y)
-  if (req.body.direction == "up") {
-    y -= 10
+  if (!allSessions.includes(req.session.id)) {
+    console.log("All sessions is empty")
+    res.redirect("/")
   } else {
-    y += 10
+    console.log("Found myself in allsessions")
   }
-  console.log("new", y)
 
-
-  // console.log(players)
-
-  res.render("view.ejs", {id: req.body.id, token: req.body.token, yPos: y})
 })
-
 app.listen(port, () => console.log(`Listening on port: ${port}`))
