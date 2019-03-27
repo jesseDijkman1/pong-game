@@ -56,29 +56,43 @@ app.get("/lobby", (req, res) => {
   }
 })
 
-app.post("/ready", (req, res) => {
-  const allSessions = Object.keys(req.sessionStore.sessions);
-  const player = req.body.player;
-
-  readyPlayers.push(player);
-
-  res.render("lobby.ejs", {
-    host: host,
-    players: allSessions,
-    thisSession: player,
-    ready: readyPlayers
-  })
-})
-
-app.get("/ready", (req, res) => {
+app.get("/ready", async (req, res) => {
   const allSessions = Object.keys(req.sessionStore.sessions);
   const player = req.session.id;
 
-  res.render("lobby.ejs", {
-    host: host,
-    players: allSessions,
-    thisSession: player,
-    ready: readyPlayers
-  })
+  if (!readyPlayers.includes(player)) {
+    readyPlayers.push(player)
+  }
+
+  try {
+    await allReady(allSessions);
+
+    res.redirect("/gameStart")
+  } catch (e) {
+    console.log(e, "not ready")
+
+    res.render("lobby.ejs", {
+      host: host,
+      players: allSessions,
+      thisSession: player,
+      ready: readyPlayers
+    })
+  }
 })
+
+app.get("/gameStart", (req, res) => {
+  res.send("READY")
+})
+
+function allReady(sessions) {
+  return new Promise((resolve, reject) => {
+    sessions.forEach(s => {
+      if (!readyPlayers.includes(s)) {
+        reject(s)
+      }
+    })
+    resolve()
+  })
+}
+
 app.listen(port, () => console.log(`Listening on port: ${port}`))

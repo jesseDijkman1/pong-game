@@ -18,8 +18,8 @@
     <% } %>
   <% }) %>
 
-  <form method="POST" action="/ready">
-    <button type="submit" name="player" value="<%= thisSession %>">Ready</button>
-  </form>
+  <% if (!ready.includes(thisSession)) { %>
+  <a href="/ready">Ready</a>
+  <% } %>
 </body>
 </html>
