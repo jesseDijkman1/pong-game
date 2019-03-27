@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <% if (ready.includes(thisSession)) { %>
+  <meta http-equiv="refresh" content="1;url=http://<%= host %>/ready">
+  <% } %>
+  <title>Test</title>
+</head>
+<body>
+  <% players.forEach((p, i) => { %>
+    <% if (ready.includes(p)) { %>
+      <p><%= i %> <%= p %> READY</p>
+    <% } else { %>
+      <p><%= i %> <%= p %></p>
+    <% } %>
+  <% }) %>
+
+  <form method="POST" action="/ready">
+    <button type="submit" name="player" value="<%= thisSession %>">Ready</button>
+  </form>
+</body>
+</html>

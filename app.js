@@ -23,7 +23,9 @@ app.use(session({secret: "Shh, its a secret!"}));
 // app.use(cookieParser());
 // app.use(session({store: sessionStore, secret: "mysecret"}));
 
-let players = [];
+const maxPlayers = 2;
+const host = "localhost:4000" // Might become heroku somthing
+let readyPlayers = [];
 
 app.get("/", (req, res) => {
   console.log("in root")
@@ -38,8 +40,45 @@ app.get("/lobby", (req, res) => {
     console.log("All sessions is empty")
     res.redirect("/")
   } else {
-    console.log("Found myself in allsessions")
+    if (allSessions.length === maxPlayers) {
+      res.render("lobby.ejs", {
+        host: host,
+        players: allSessions,
+        thisSession: req.session.id,
+        ready: readyPlayers
+      })
+    } else {
+      res.render("waiting.ejs", {
+        host: host,
+        players: allSessions
+      })
+    }
   }
+})
 
+app.post("/ready", (req, res) => {
+  const allSessions = Object.keys(req.sessionStore.sessions);
+  const player = req.body.player;
+
+  readyPlayers.push(player);
+
+  res.render("lobby.ejs", {
+    host: host,
+    players: allSessions,
+    thisSession: player,
+    ready: readyPlayers
+  })
+})
+
+app.get("/ready", (req, res) => {
+  const allSessions = Object.keys(req.sessionStore.sessions);
+  const player = req.session.id;
+
+  res.render("lobby.ejs", {
+    host: host,
+    players: allSessions,
+    thisSession: player,
+    ready: readyPlayers
+  })
 })
 app.listen(port, () => console.log(`Listening on port: ${port}`))
