@@ -24,7 +24,7 @@ app.use(session({secret: "Shh, its a secret!"}));
 // app.use(session({store: sessionStore, secret: "mysecret"}));
 
 const maxPlayers = 2;
-const host = "localhost:4000" // Might become heroku somthing
+const host = "localhost:4000"; // Might become heroku somthing
 let readyPlayers = [];
 
 app.get("/", (req, res) => {
@@ -81,7 +81,20 @@ app.get("/ready", async (req, res) => {
 })
 
 app.get("/gameStart", (req, res) => {
-  res.send("READY")
+  res.render("game.ejs", {
+    host: host,
+    sessions: readyPlayers
+    // thisSession: req.session.id,
+    // enemySession: readyPlayers.find(p => p != req.session.id)
+  })
+})
+
+app.get("/pad", (req, res) => {
+  const thisSession = req.session.id;
+  const player = req.query.id;
+  const enemy = (player != thisSession) ? true : false;
+
+  res.render("pad.ejs", {enemy: enemy, id: player, thisSession: thisSession})
 })
 
 function allReady(sessions) {
