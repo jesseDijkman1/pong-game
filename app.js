@@ -26,6 +26,7 @@ app.use(session({secret: "Shh, its a secret!"}));
 const maxPlayers = 2;
 const host = "localhost:4000"; // Might become heroku somthing
 let readyPlayers = [];
+let pads = {};
 
 app.get("/", (req, res) => {
   console.log("in root")
@@ -62,6 +63,9 @@ app.get("/ready", async (req, res) => {
 
   if (!readyPlayers.includes(player)) {
     readyPlayers.push(player)
+    pads[player] = {
+      yPos: 0
+    }
   }
 
   try {
@@ -82,19 +86,46 @@ app.get("/ready", async (req, res) => {
 
 app.get("/gameStart", (req, res) => {
   res.render("game.ejs", {
-    host: host,
-    sessions: readyPlayers
-    // thisSession: req.session.id,
-    // enemySession: readyPlayers.find(p => p != req.session.id)
+    host: host
   })
+  // const thisSession = req.session.id;
+  // console.log(thisSession)
+  // // const enemy = (player != thisSession) ? true : false;
+  //
+  // res.render("pads.ejs", {
+  //   sessions: readyPlayers,
+  //   thisSession: thisSession,
+  //   pads: pads
+  // })
 })
 
 app.get("/pad", (req, res) => {
   const thisSession = req.session.id;
-  const player = req.query.id;
-  const enemy = (player != thisSession) ? true : false;
+  console.log(thisSession)
+  // const enemy = (player != thisSession) ? true : false;
 
-  res.render("pad.ejs", {enemy: enemy, id: player, thisSession: thisSession})
+  res.render("pads.ejs", {
+    sessions: readyPlayers,
+    thisSession: thisSession,
+    pads: pads
+  })
+})
+
+app.post("/pad/update", (req, res) => {
+  const direction = req.body.direction;
+  const player = req.session.id;
+
+  if (direction === "up") {
+    pads[player].yPos -= 10
+  } else {
+    pads[player].yPos += 10
+  }
+
+  res.render("pads.ejs", {
+    sessions: readyPlayers,
+    thisSession: player,
+    pads: pads
+  })
 })
 
 function allReady(sessions) {

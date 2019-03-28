@@ -1,47 +1,75 @@
 * {
   margin: 0;
   padding: 0;
-  padding: 0;
+  box-sizing: border-box;
 }
 
 html {
   font-family: system-ui, Arial, sans-serif;
 }
 
-.player-pad {
-  width: 3rem;
-  height: 100vh;
+/* body {
+  position: relative;
+} */
+
+.player-pad-section {
   position: absolute;
-  background: grey;
-  border: none;
+  height: 100%;
+  width: 5%;
 }
 
-.player-pad.left {
-  left: 1rem;
-  top: 0;
+.player-pad-section:first-of-type {
+  border: solid 1px red;
+  left: 0;
 }
-.player-pad:not(.left) {
-  right: 1rem;
-  top: 0;
+
+.player-pad-section:last-of-type {
+  border: solid 1px blue;
+  right: 0;
 }
 
 .pad {
-  width: 100%;
-  height: 20vh;
-  background: black;
-  color: limegreen;
   position: absolute;
+  width: 100%;
+  height: 6rem;
+  background: black;
 }
 
-.controller {
+.pad-controller {
+  z-index: 1;
+  height: 7rem;
   position: absolute;
+  width: 100%;
+  top: 0;
   bottom: 0;
+  margin: auto 0;
+}
+.controller-btn {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+}
+
+.controller-btn[value="up"] {
+  bottom: 50%;
+}
+
+.controller-btn[value="down"] {
+  top: 50%;
+}
+
+.fullscreen {
+  position: absolute;
+  height: 100%;
   width: 100%;
 }
-.controller .pos-btn {
-  display: block;
-  width: 100%;
-  height: 3rem;
-  background: white;
-  border: solid 1px black;
+
+.ball-section {
+  position: absolute;
+  width: 90%;
+  height: 100%;
+  border: solid 3px green;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 }

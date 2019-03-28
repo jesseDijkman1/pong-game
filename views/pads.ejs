@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/styles.css">
+  <title>Game</title>
+</head>
+<body>
+  <% sessions.forEach(s => { %>
+    <div class="player-pad-section">
+      <div class="pad" style="top:<%= pads[s].yPos %>%"></div>
+
+      <% if (s == thisSession) { %>
+      <form class="pad-controller" method="POST" action="/pad/update?id=<%= thisSession %>">
+        <button class="controller-btn" type="submit" name="direction" value="up">Up</button>
+        <button class="controller-btn" type="submit" name="direction" value="down">Down</button>
+      </form>
+      <% } %>
+    </div>
+  <% }) %>
+</body>
+</html>
