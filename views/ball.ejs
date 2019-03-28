@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="refresh" content="<%= ball.speed %>;url=http://<%= host %>/updateBall">
+  <link rel="stylesheet" href="../css/styles.css">
+  <title>Game</title>
+</head>
+<body>
+  <div id="ball" style="position: absolute">
+    O
+  </div>
+
+  <style>
+    #ball {
+      opacity: 0;
+      animation: moveBall <%= ball.speed %>s linear;
+    }
+
+    @keyframes moveBall {
+      0% {
+        opacity: 1;
+        left: <%= ball.start.x %>%;
+        top: <%= ball.start.y %>%;
+      }
+      100% {
+        opacity: 1;
+        left: <%= ball.end.x %>%;
+        top: <%= ball.end.y %>%;
+      }
+    }
+  </style>
+</body>
+</html>
