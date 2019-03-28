@@ -4,17 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta http-equiv="refresh" content="<%= ball.speed %>;url=http://<%= host %>/updateBall">
+  <% if (single) { %>
+    <meta http-equiv="refresh" content="<%= ball.speed %>;url=http://<%= host %>/updateBall?single=true">
+  <% } else { %>
+    <meta http-equiv="refresh" content="<%= ball.speed %>;url=http://<%= host %>/updateBall">
+  <% } %>
+
   <link rel="stylesheet" href="../css/styles.css">
   <title>Game</title>
 </head>
 <body>
+  <% if (single) { %>
+    <h1 id="score">Hits: <%= score %> Missed: <%= missed %></h1>
+  <% } %>
+
   <div id="ball" style="position: absolute">
     O
   </div>
 
   <style>
     #ball {
+      width: 1rem;
+      height: 1rem;
+      background: red;
       opacity: 0;
       animation: moveBall <%= ball.speed %>s linear;
     }

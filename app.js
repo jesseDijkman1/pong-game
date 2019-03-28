@@ -23,21 +23,23 @@ app.use(session({secret: "Shh, its a secret!"}));
 // app.use(cookieParser());
 // app.use(session({store: sessionStore, secret: "mysecret"}));
 
-const maxPlayers = 2;
-const ballSpeed = 3 / 100; // Is the speed per 1%
+// const maxPlayers = 2;
+const ballSpeed = 2.5 / 98; // Is the speed per 1%
 const host = "localhost:4000"; // Might become heroku somthing
-
+const padHeight = 10;
 let readyPlayers = [];
+
 let pads = {};
 let ball;
-
+let score = 0;
+let missed = 0;
 
 class Ball {
-  constructor(x, y) {
+  constructor(x, y, single) {
     this.speed;
+    this.single = single;
     this.yDistance;
     this.xDistance;
-
     this.start = {
       x: x,
       y: y
@@ -50,6 +52,10 @@ class Ball {
     this.startDirection()
     this.calcDistances()
     this.calcSpeed()
+  }
+
+  randomBetween(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
   calcDistances() {
@@ -68,49 +74,151 @@ class Ball {
 
 
     const randomBinary = () => Math.round(Math.random()); // 1 or 0
-    const randomBetween = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+    // const randomBetween = (min, max) => ;
 
     if (randomBinary() === 1) {
       // Go to the top or bottom first
 
-      console.log("go to the top or bottom")
-      const randomYDirection = randomBinary() ? 100 : 0; // Bottom / Top
-      const randomXDirection = randomBinary();
-      console.log("100 = bottom, 0 = top", randomYDirection)
+      // console.log("go to the top or bottom")
+      const randomYDirection = randomBinary() ? 98 : 0; // Bottom / Top
+      const randomXDirection = this.single ? 1 : randomBinary();
+      // console.log("100 = bottom, 0 = top", randomYDirection)
       this.end.y = randomYDirection;
 
       if (randomXDirection === 1) {
         // Go to right
-        console.log("go the right")
-        this.end.x = randomBetween(75, 90)
+        // console.log("go the right")
+        this.end.x = this.randomBetween(75, 90)
       } else {
         // Go to left
-        console.log("go the left")
-        this.end.x = randomBetween(10, 25)
+        // console.log("go the left")
+        this.end.x = this.randomBetween(10, 25)
       }
 
     } else {
 
-      console.log("go to the left or right")
-      const randomXDirection = randomBinary() ? 100 : 0; // right / left
+      // console.log("go to the left or right")
+
+      const randomXDirection = this.single ? 98 : randomBinary() ? 98 : 0; // right / left
       const randomYDirection = randomBinary();
-      console.log("100 = right, 0 = left", randomYDirection)
+      // console.log("100 = right, 0 = left", randomYDirection)
       this.end.x = randomXDirection;
 
       if (randomYDirection === 1) {
         // Go to bottom
-        console.log("go to bottom")
-        this.end.y = randomBetween(50, 90)
+        // console.log("go to bottom")
+        this.end.y = this.randomBetween(75, 90)
       } else {
         // Go to top
-        console.log("go to top")
-        this.end.y = randomBetween(10, 50)
+        // console.log("go to top")
+        this.end.y = this.randomBetween(25, 40)
       }
       // Go to the sides first
     }
     })
   }
 
+  update() {
+    let xDirection;
+    let yDirection;
+
+
+
+    if (this.start.y > this.end.y) {
+      yDirection = "up"
+    } else {
+      yDirection = "down"
+    }
+
+    if (this.start.x > this.end.x) {
+      xDirection = "left"
+    } else {
+      xDirection = "right"
+    }
+
+    console.log(xDirection, yDirection)
+
+    if (this.end.y === 0) {
+      // TOP
+      this.start.y = 0;
+      this.start.x = this.end.x;
+      this.end.y = this.randomBetween(10, 90)
+
+      if (xDirection == "left") {
+        this.end.x = 0;
+      } else {
+        this.end.x = 98;
+      }
+
+    } else if (this.end.y === 98) {
+      // BOTTOM
+      this.start.y = 98;
+      this.start.x = this.end.x;
+      this.end.y = this.randomBetween(10, 90);
+
+      if (xDirection == "left") {
+        this.end.x = 0;
+      } else {
+        this.end.x = 98;
+      }
+
+    } else if (this.end.x === 0) {
+      // LEFT
+      this.start.x = 0;
+      this.start.y = this.end.y;
+      this.end.x = this.randomBetween(10, 90);
+
+      if (yDirection == "up") {
+        this.end.y = 0
+      } else {
+        this.end.y = 98
+      }
+
+    } else if (this.end.x === 98) {
+      // RIGHT
+      this.start.x = 98;
+      this.start.y = this.end.y;
+      this.end.x = this.randomBetween(10, 90);
+
+      if (yDirection == "up") {
+        this.end.y = 0
+      } else {
+        this.end.y = 98
+      }
+    }
+
+    this.calcDistances()
+    this.calcSpeed()
+  }
+
+  checkPad(pad) {
+    if (this.start.x === 0) {
+      const padTop = pad.yPos;
+      const padBottom = pad.yPos + padHeight;
+      const ballY = this.start.y;
+
+      if (ballY >= padTop && ballY <= padBottom) {
+        console.log("was on pad")
+        switch (score) {
+          case 5:
+          this.speed = 2 / 98
+          break;
+          case 10:
+          this.speed = 1.5 / 98
+          break;
+          case 15:
+          this.speed = 1 / 98
+          break;
+        }
+
+        console.log(this.speed)
+        score++;
+      } else {
+        missed++;
+        console.log("missed")
+      }
+    }
+  }
 }
 
 
@@ -176,10 +284,11 @@ app.get("/ready", async (req, res) => {
 })
 
 app.get("/gameStart", (req, res) => {
-  ball = new Ball(50, 50)
-  console.log(ball)
+  ball = new Ball(50, 50, false)
+
   res.render("game.ejs", {
-    host: host
+    host: host,
+    singlePlayer: false
   })
   // const thisSession = req.session.id;
   // console.log(thisSession)
@@ -192,47 +301,98 @@ app.get("/gameStart", (req, res) => {
   // })
 })
 
+app.get("/gameStart/single", (req, res) => {
+  const player = req.session.id;
+
+  ball = new Ball(50, 50, true)
+
+  pads[player] = {
+    yPos: 0
+  }
+
+  res.render("game.ejs", {
+    host: host,
+    singlePlayer: true
+  })
+})
+
+
+
 app.get("/pad", (req, res) => {
   const thisSession = req.session.id;
-  console.log(thisSession)
-  // const enemy = (player != thisSession) ? true : false;
+  const single = req.query.single || false;
 
-  res.render("pads.ejs", {
-    sessions: readyPlayers,
-    thisSession: thisSession,
-    pads: pads
-  })
+  // const enemy = (player != thisSession) ? true : false;
+  if (single) {
+    res.render("singlePad.ejs", {pads: pads, thisSession: thisSession})
+  } else {
+    res.render("pads.ejs", {
+      sessions: readyPlayers,
+      thisSession: thisSession,
+      pads: pads
+    })
+  }
 })
 
 app.post("/pad/update", (req, res) => {
   const direction = req.body.direction;
-  const player = req.session.id;
+  const thisSession = req.session.id;
+  const single = req.query.single || false;
 
   if (direction === "up") {
-    pads[player].yPos -= 10
+    pads[thisSession].yPos -= 10
   } else {
-    pads[player].yPos += 10
+    pads[thisSession].yPos += 10
   }
 
-  res.render("pads.ejs", {
-    sessions: readyPlayers,
-    thisSession: player,
-    pads: pads
-  })
+  if (single) {
+    res.render("singlePad.ejs", {pads: pads, thisSession: thisSession})
+  } else {
+    res.render("pads.ejs", {
+      sessions: readyPlayers,
+      thisSession: thisSession,
+      pads: pads
+    })
+  }
 })
 
 
 
 app.get("/ball", (req, res) => {
-  res.render("ball.ejs", {ball: ball, host: host})
+  const single = req.query.single || false;
+
+  res.render("ball.ejs", {
+    ball: ball,
+    host: host,
+    single: single,
+    score: score,
+    missed: missed
+  })
 })
 
-app.get("/updateBall", async (req, res) => {
-  // ball.update()
+app.get("/updateBall", (req, res) => {
+  const player = req.session.id;
+  const single = req.query.single || false;
+  ball.update()
+
+  if (single) {
+    ball.checkPad(pads[player])
+  }
+
   // await changeDirection();
   // console.log(ball)
   // res.redirect("/ball");
+  res.render("ball.ejs", {
+    ball: ball,
+    host: host,
+    single: single,
+    score: score,
+    missed: missed
+  })
 })
+
+
+
 
 function allReady(sessions) {
   return new Promise((resolve, reject) => {

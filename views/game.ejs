@@ -8,7 +8,12 @@
   <title>Game</title>
 </head>
 <body>
-  <iframe src="http://<%= host %>/ball" class="ball-section"></iframe>
-  <iframe src="http://<%= host %>/pad" class="fullscreen"></iframe>
+  <% if (singlePlayer) { %>
+    <iframe src="http://<%= host %>/ball?single=true" class="ball-section"></iframe>
+    <iframe src="http://<%= host %>/pad?single=true" class="fullscreen"></iframe>
+  <% } else { %>
+    <iframe src="http://<%= host %>/ball" class="ball-section"></iframe>
+    <iframe src="http://<%= host %>/pad" class="fullscreen"></iframe>
+  <% } %>
 </body>
 </html>

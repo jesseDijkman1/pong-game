@@ -35,6 +35,11 @@ html {
   background: black;
 }
 
+#score {
+  width: 100%;
+  text-align: center;
+}
+
 .pad-controller {
   z-index: 1;
   height: 7rem;
@@ -69,6 +74,7 @@ html {
   width: 90%;
   height: 100%;
   border: solid 3px green;
+
   left: 0;
   right: 0;
   margin: 0 auto;
