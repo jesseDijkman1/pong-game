@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 // const sessionStore = new session.MemoryStore();
 // Default variables
-const port = 4000;
+const port = 4000 || process.env.PORT;
 const app = express();
 
 // App settings
