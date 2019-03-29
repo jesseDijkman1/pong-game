@@ -23,9 +23,11 @@ app.use(session({secret: "Shh, its a secret!"}));
 // app.use(cookieParser());
 // app.use(session({store: sessionStore, secret: "mysecret"}));
 
-// const maxPlayers = 2;
+const maxPlayers = 2;
 const ballSpeed = 2.5 / 98; // Is the speed per 1%
-const host = "localhost:4000"; // Might become heroku somthing
+// const host = "https://server-pong.herokuapp.com/"; // Might become heroku somthing
+
+let host = (r) => `${r.protocol }://${r.get("host")}`;
 const padHeight = 15;
 let readyPlayers = [];
 
@@ -228,7 +230,6 @@ class Ball {
 
 
 app.get("/", (req, res) => {
-  console.log("in root")
   res.redirect("/lobby")
 })
 
@@ -242,14 +243,14 @@ app.get("/lobby", (req, res) => {
   } else {
     if (allSessions.length === maxPlayers) {
       res.render("lobby.ejs", {
-        host: host,
+        host: host(req),
         players: allSessions,
         thisSession: req.session.id,
         ready: readyPlayers
       })
     } else {
       res.render("waiting.ejs", {
-        host: host,
+        host: host(req),
         players: allSessions
       })
     }
@@ -275,7 +276,7 @@ app.get("/ready", async (req, res) => {
     console.log(e, "not ready")
 
     res.render("lobby.ejs", {
-      host: host,
+      host: host(req),
       players: allSessions,
       thisSession: player,
       ready: readyPlayers
@@ -287,7 +288,7 @@ app.get("/gameStart", (req, res) => {
   ball = new Ball(50, 50, false)
 
   res.render("game.ejs", {
-    host: host,
+    host: host(req),
     singlePlayer: false
   })
   // const thisSession = req.session.id;
@@ -309,9 +310,9 @@ app.get("/gameStart/single", (req, res) => {
   pads[player] = {
     yPos: 0
   }
-
+  console.log(host(req))
   res.render("game.ejs", {
-    host: host,
+    host: host(req),
     singlePlayer: true
   })
 })
@@ -366,7 +367,7 @@ app.get("/ball", (req, res) => {
 
   res.render("ball.ejs", {
     ball: ball,
-    host: host,
+    host: host(req),
     single: single,
     score: score,
     missed: missed
@@ -387,7 +388,7 @@ app.get("/updateBall", (req, res) => {
   // res.redirect("/ball");
   res.render("ball.ejs", {
     ball: ball,
-    host: host,
+    host: host(req),
     single: single,
     score: score,
     missed: missed

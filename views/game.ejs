@@ -9,11 +9,11 @@
 </head>
 <body>
   <% if (singlePlayer) { %>
-    <iframe src="http://<%= host %>/ball?single=true" class="ball-section"></iframe>
-    <iframe src="http://<%= host %>/pad?single=true" class="fullscreen"></iframe>
+    <iframe src="<%= host %>/ball?single=true" class="ball-section"></iframe>
+    <iframe src="<%= host %>/pad?single=true" class="fullscreen"></iframe>
   <% } else { %>
-    <iframe src="http://<%= host %>/ball" class="ball-section"></iframe>
-    <iframe src="http://<%= host %>/pad" class="fullscreen"></iframe>
+    <iframe src="<%= host %>/ball" class="ball-section"></iframe>
+    <iframe src="<%= host %>/pad" class="fullscreen"></iframe>
   <% } %>
 </body>
 </html>
