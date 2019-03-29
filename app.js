@@ -6,6 +6,7 @@ const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+require("dotenv").config();
 // const sessionStore = new session.MemoryStore();
 // Default variables
 const port = 4000 || process.env.PORT;
