@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="player-pad-section">
-    <div class="pad" style="top:<%= pads[thisSession].yPos %>%"></div>
+    <div class="pad" style="top:<%= pads[thisSession].yPos %>%;height:<%= padHeight %>%"></div>
 
     <form class="pad-controller" method="POST" action="/pad/update?id=<%= thisSession %>&single=true">
       <button class="controller-btn" type="submit" name="direction" value="up">Up</button>

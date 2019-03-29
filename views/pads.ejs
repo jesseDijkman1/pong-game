@@ -10,7 +10,7 @@
 <body>
   <% sessions.forEach(s => { %>
     <div class="player-pad-section">
-      <div class="pad" style="top:<%= pads[s].yPos %>%"></div>
+      <div class="pad" style="top:<%= pads[s].yPos %>%;height:<%= padHeight %>%"></div>
 
       <% if (s == thisSession) { %>
       <form class="pad-controller" method="POST" action="/pad/update?id=<%= thisSession %>">

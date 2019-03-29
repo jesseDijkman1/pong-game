@@ -26,7 +26,7 @@ app.use(session({secret: "Shh, its a secret!"}));
 // const maxPlayers = 2;
 const ballSpeed = 2.5 / 98; // Is the speed per 1%
 const host = "localhost:4000"; // Might become heroku somthing
-const padHeight = 10;
+const padHeight = 15;
 let readyPlayers = [];
 
 let pads = {};
@@ -324,11 +324,12 @@ app.get("/pad", (req, res) => {
 
   // const enemy = (player != thisSession) ? true : false;
   if (single) {
-    res.render("singlePad.ejs", {pads: pads, thisSession: thisSession})
+    res.render("singlePad.ejs", {pads: pads, padHeight: padHeight, thisSession: thisSession})
   } else {
     res.render("pads.ejs", {
       sessions: readyPlayers,
       thisSession: thisSession,
+      padHeight: padHeight,
       pads: pads
     })
   }
@@ -346,11 +347,13 @@ app.post("/pad/update", (req, res) => {
   }
 
   if (single) {
-    res.render("singlePad.ejs", {pads: pads, thisSession: thisSession})
+    console.log(padHeight)
+    res.render("singlePad.ejs", {pads: pads, padHeight: padHeight, thisSession: thisSession})
   } else {
     res.render("pads.ejs", {
       sessions: readyPlayers,
       thisSession: thisSession,
+      padHeight: padHeight,
       pads: pads
     })
   }
@@ -390,9 +393,6 @@ app.get("/updateBall", (req, res) => {
     missed: missed
   })
 })
-
-
-
 
 function allReady(sessions) {
   return new Promise((resolve, reject) => {
